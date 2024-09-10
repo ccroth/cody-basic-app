@@ -56,7 +56,7 @@ The app will be available at `http://127.0.0.1:8080/`. <br>
 <a id="C"></a>
 ## C. Deploy to Kubernetes
 
-***Note:** For the sake of this assignment, the procedure below is written assuming the cluster is a *local minikube cluster*. However the same basic steps work for deploying to any k8s cluster, just make sure `kubectl` is communicating with the correct one.* <br>
+***Note:** For the sake of this assignment, the procedure below is written assuming the cluster is a local minikube cluster. However the same basic steps work for deploying to any k8s cluster, just make sure `kubectl` is communicating with the correct one.* <br>
 
 ### Prerequisites
 - [Docker](https://docs.docker.com/engine/install/) installed and running
@@ -76,14 +76,14 @@ echo -n '<value_here>' | openssl base64
 Other noteworthy aspects of the `values.yaml`:
 - `replicaCount` determines the number of replicas for the frontend + backend deployment, thus allowing scaling of the app
 - `appURL` sets the URL for which the app will be accessed (when using the ingress - see **Method 2** below)
-- I wouldn't recommend modifying the other values unless you had good reason to (though yes you can technically change the container ports, volume name, volume storage capacity, etc.)
+- I wouldn't recommend modifying the other values unless you had good reason to (although there are times when you might change `volume.name` - see [Cleaning Up](#cleaning-up))
 
 After setting `values.yaml`, install the chart:
 ```bash
 cd build_deploy/
 helm upgrade --install cba ./cba-chart
 ```
-Once the release is installed, you can **access the service** using one of the two following methods. <br>
+Once the chart is installed, you can **access the service** using one of the two following methods. <br>
 
 ### Method 1: Using minikube service
 Simply run the command:
@@ -109,7 +109,7 @@ kubectl get ingress
 ```bash
 minikube tunnel
 ```
-Make sure to enter root/admin password if prompted. The app will be available over `http://<appURL>/` (so `http://cba.ccr.test/` by default). <br><br>
+Make sure to enter root/admin password if prompted. The app will be available over `http://<appURL>/` (i.e. `http://cba.ccr.test/` by default). <br><br>
 
 ### Cleaning Up
 The chart can be uninstalled via:
@@ -120,7 +120,7 @@ I designed the volume (i.e. the PersistentVolumeClaim object) to persist on unin
 ```bash
 kubectl delete PersistentVolumeClaims db-volume
 ```
-**Warning:** deleting the volume will cause the database to lose any added data. If after deploying, you want to make any changes to database related values in `values.yaml` (e.g. `db_pass`), you will need to either delete the existing volume with the above command, or change the `volume.name` value in `values.yaml` to something different.<br><br>
+**Warning:** deleting the volume will cause the database to lose any added data. Again, recall that the environment variables for the `cba-mysql` deployment will be stored in the volume. Thus, if after deploying, you make any changes to database related values (e.g. `db_pass` or `db_database`) in `values.yaml`, you will need to either delete the existing volume with the above command, or change the `volume.name` value in `values.yaml` to something different (i.e. create a new volume).<br><br>
 
 <a id="D"></a>
 ## D. Using the App
