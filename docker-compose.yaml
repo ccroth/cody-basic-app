@@ -1,0 +1,25 @@
+services:
+    cba-app:
+      build: app/
+      ports:
+        - "8080:8080"
+      environment:
+        - db_user=root
+        - db_pass=<password_here>
+        - db_host=cba-mysql
+        - db_port=3306
+        - db_database=cba_db
+        - secret_key=<secret_key_here>
+    cba-mysql:
+      build: mysql/
+      restart: always
+      ports:
+        - "3306:3306"
+      environment:
+        - MYSQL_ROOT_PASSWORD=<password_here>
+        - MYSQL_DATABASE=cba_db
+      volumes:
+        - db_volume:/var/lib/mysql
+volumes:
+  db_volume:
+  

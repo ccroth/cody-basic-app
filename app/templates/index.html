@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-primary">{% block title %} Cody's Basic App {% endblock %}</h1>
+<h3>Basic web app to add, view, update, and remove basketball players.</h3>
+<a href="addPlayer">
+    <button>Add New Player</button>
+</a>
+<hr style="height:2px;border-width:0;color:black;background-color:gray">
+<h4>Current player list:</h4>
+{% for player in players %}
+<div class="playerEntry">
+    <a href="{{ url_for('getPlayer', id=player['id']) }}">
+        <h4>{{ player['name'] }}</h4>
+    </a>
+    <span class="badge badge-primary playerBadge">{{ player['team'] }}</span>
+</div>
+<hr style="height:1px;border-width:0;color:rgba(0, 0, 0, 0.4);background-color:gray">
+{% endfor %}
+{% endblock %}
+
+

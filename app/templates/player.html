@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>{% block title %} {{ player['name'] }} {% endblock %}</h3>
+
+<div class="container">
+    <a href="{{ url_for('updatePlayer', id=player['id']) }}">
+        <button class="btn btn-primary">Edit Player Info</button>
+    </a>
+    <a>
+        <form action="{{ url_for('deletePlayer', id=player['id']) }}" method="POST" style = "display:inline">
+            <button class="btn btn-danger" onclick="return confirm('Delete this player?')">Delete Player</button>
+        </form>
+    </a>
+</div>
+<p></p>
+<style>
+table, th, td {
+    border:1px solid black;
+    width: 50%;
+    line-height: 4;
+    text-align: center;
+}
+</style>
+<table>
+    <tr>
+        <th>Age</th>
+        <td>{{ player['age'] }}</td>
+    </tr>
+    <tr>
+        <th>Height</th>
+        <td>{{ player['height'] }} m</td>
+    </tr>
+    <tr>
+        <th>Team</th>
+        <td>{{ player['team'] }}</td>
+    </tr>
+    <tr>
+        <th>Position</th>
+        <td>{{ player['position'] }}</td>
+    </tr>
+    <tr>
+        <th>Jersey #</th>
+        <td>{{ player['jersey_number'] }}</td>
+    </tr>
+</table>
+
+<p></p>
+<a href="/"><button>Home</button></a>
+{% endblock %}
+
+

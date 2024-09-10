@@ -1,0 +1,9 @@
+apiVersion: v2
+name: cba-chart
+description: A Helm chart for deploying cody-basic-app to k8s
+
+type: application
+
+version: 1.0.0
+
+appVersion: "base"

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <title>{% block title %} {% endblock %}</title>
+  </head>
+  <body>
+    <div class="container">
+      {% with errors = get_flashed_messages(category_filter=["error"]) %}
+      {% if errors %}
+        {% for message in errors %}
+          <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+      {% endwith %}
+      {% with infos = get_flashed_messages(category_filter=["info"]) %}
+      {% if infos %}
+        {% for message in infos %}
+          <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+      {% endwith %}
+      {% block content %} {% endblock %}
+    </div>
+  </body>
+</html>

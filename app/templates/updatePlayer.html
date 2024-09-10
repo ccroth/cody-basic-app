@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>{% block title %} Modify an existing Player {% endblock %}</h3>
+
+<form method="post">
+    <div class="form-group">
+        <label for="player_name">Player Name</label>
+        <input type="text" name="player_name"
+               class="form-control"
+               value="{{ request.form['player_name'] or player['name'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="player_age">Player Age</label>
+        <input type="text" name="player_age"
+               class="form-control"
+               value="{{ request.form['player_age'] or player['age'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="player_height">Height (in meters)</label>
+        <input type="text" name="player_height"
+               class="form-control"
+               value="{{ request.form['player_height'] or player['height'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="player_team">Team</label>
+        <p style="opacity: 50%;"><i>Currently "{{ player['team'] }}"</i></p>
+        <select id="player_team" name="player_team"
+                value="{{ request.form['player_team'] }}">
+            <option value="" selected disabled><i>Select team</i></option>
+            <option value="Atlanta Hawks">Atlanta Hawks</option>
+            <option value="Boston Celtics">Boston Celtics</option>
+            <option value="Brooklyn Nets">Brooklyn Nets</option>
+            <option value="Charlotte Hornets">Charlotte Hornets</option>
+            <option value="Chicago Bulls">Chicago Bulls</option>
+            <option value="Cleveland Cavaliers">Cleveland Cavaliers</option>
+            <option value="Dallas Mavericks">Dallas Mavericks</option>
+            <option value="Denver Nuggets">Denver Nuggets</option>
+            <option value="Detroit Pistons">Detroit Pistons</option>
+            <option value="Golden State Warriors">Golden State Warriors</option>
+            <option value="Houston Rockets">Houston Rockets</option>
+            <option value="Indiana Pacers">Indiana Pacers</option>
+            <option value="Los Angeles Clippers">Los Angeles Clippers</option>
+            <option value="Los Angeles Lakers">Los Angeles Lakers</option>
+            <option value="Memphis Grizzlies">Memphis Grizzlies</option>
+            <option value="Miami Heat">Miami Heat</option>
+            <option value="Milwaukee Bucks">Milwaukee Bucks</option>
+            <option value="Minnesota Timberwolves">Minnesota Timberwolves</option>
+            <option value="New Orleans Pelicans">New Orleans Pelicans</option>
+            <option value="New York Knicks">New York Knicks</option>
+            <option value="Oklahoma City Thunder">Oklahoma City Thunder</option>
+            <option value="Orlando Magic">Orlando Magic</option>
+            <option value="Philadelphia 76ers">Philadelphia 76ers</option>
+            <option value="Phoenix Suns">Phoenix Suns</option>
+            <option value="Portland Trail Blazers">Portland Trail Blazers</option>
+            <option value="Sacramento Kings">Sacramento Kings</option>
+            <option value="San Antonio Spurs">San Antonio Spurs</option>
+            <option value="Toronto Raptors">Toronto Raptors</option>
+            <option value="Utah Jazz">Utah Jazz</option>
+            <option value="Washington Wizards">Washington Wizards</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="player_position">Position</label>
+        <p style="opacity: 50%;"><i>Currently "{{ player['position'] }}"</i></p>
+        <select id="player_position" name="player_position"
+                value="{{ request.form['player_position'] or player['position'] }}">
+            <option value="" selected disabled><i>Select position</i></option>
+            <option value="Guard">Guard</option>
+            <option value="Center">Center</option>
+            <option value="Forward">Forward</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="player_jersey_num">Jersey #</label>
+        <input type="text" name="player_jersey_num"
+               class="form-control"
+               value="{{ request.form['player_jersey_num'] or player['jersey_number'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+<a href="/"><button>Cancel</button></a>
+{% endblock %}
