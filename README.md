@@ -18,7 +18,7 @@ The app consists of 3 basic layers:
 
 The combination of Flask and Gunicorn handle the frontend and backened, which is packaged together as a container that I refer to as the `cba-app`. Refer to the `app/` directory for this stuff; in particular, the `Dockerfile` to launch the container. The database layer has its own separate `Dockerfile` and container which hosts a MySQL instance: refer to the `mysql/` directory. I refer to the database container as `cba-mysql`. <br>
 
-The `cba-app` backend communicates with the database via port `3306`. The `cba-app` frontend web service is available over port `8080` locally. The database uses a volume to persist data between being brought up and down.<br><br>
+The `cba-app` backend communicates with the database via port `3306`. The `cba-app` frontend web service is available over port `8080` locally. The database uses a volume to persist data between being brought up and down (recall that container storage is ephemeral by default).<br><br>
 
 <a id="B"></a>
 ## B. Deploy Locally
@@ -48,7 +48,10 @@ Run the containers with:
 ```bash
 docker compose up
 ```
-The app will be available at `http://127.0.0.1:8080/`. <br><br>
+The app will be available at `http://127.0.0.1:8080/`. <br>
+
+**Warning:** the environment variables set for the `cba-mysql` container are saved in the volume specified in the `docker-compose.yaml` file (i.e. `db_volume` by default). That means if you for some reason want to change variables such as `MYSQL_ROOT_PASSWORD` after deployment, you must either delete the existing volume, or specify a different volume.
+<br><br>
 
 <a id="C"></a>
 ## C. Deploy to Kubernetes
@@ -72,8 +75,8 @@ echo -n '<value_here>' | openssl base64
 ```
 Other noteworthy aspects of the `values.yaml`:
 - `replicaCount` determines the number of replicas for the frontend + backend deployment, thus allowing scaling of the app
-- `appURL` sets the URL for which the app will be accessed (when using the ingress)
-- I wouldn't recommend modifying the other values unless you had good reason too (though yes you can technically change the container ports, volume name, volume storage, etc.)
+- `appURL` sets the URL for which the app will be accessed (when using the ingress - see **Method 2** below)
+- I wouldn't recommend modifying the other values unless you had good reason to (though yes you can technically change the container ports, volume name, volume storage capacity, etc.)
 
 After setting `values.yaml`, install the chart:
 ```bash
@@ -109,15 +112,15 @@ minikube tunnel
 Make sure to enter root/admin password if prompted. The app will be available over `http://<appURL>/` (so `http://cba.ccr.test/` by default). <br><br>
 
 ### Cleaning Up
-The release can be uninstalled via:
+The chart can be uninstalled via:
 ```bash
 helm uninstall cba
 ```
-I designed the volume (i.e. the PersistentVolumeClaim object) to persist on uninstall via the `helm.sh/resource-policy` so that the database doesn't lose data. If this ever needs to be removed for some reason, use:
+I designed the volume (i.e. the PersistentVolumeClaim object) to persist on uninstall via the `helm.sh/resource-policy` so that the database doesn't lose data. If this ever needs to be removed for some reason, use (make sure to uninstall the chart *before* running this command):
 ```bash
 kubectl delete PersistentVolumeClaims db-volume
 ```
-**Warning:** deleting the volume will cause the database to lose any added data.<br><br>
+**Warning:** deleting the volume will cause the database to lose any added data. If after deploying, you want to make any changes to database related values in `values.yaml` (e.g. `db_pass`), you will need to either delete the existing volume with the above command, or change the `volume.name` value in `values.yaml` to something different.<br><br>
 
 <a id="D"></a>
 ## D. Using the App
