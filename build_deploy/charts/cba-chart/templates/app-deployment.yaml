@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.34.0 (HEAD)
+  labels:
+    io.kompose.service: {{ .Values.appName }}-app
+  name: {{ .Values.appName }}-app
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      io.kompose.service: {{ .Values.appName }}-app
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.34.0 (HEAD)
+      labels:
+        io.kompose.service: {{ .Values.appName }}-app
+    spec:
+      containers:
+        - env:
+            - name: db_host
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.appName }}-configmap
+                  key: db_host
+            - name: db_port
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.appName }}-configmap
+                  key: db_port
+            - name: db_database
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.appName }}-configmap
+                  key: db_database
+            - name: db_user
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.appName }}-configmap
+                  key: db_user
+            - name: db_pass
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.appName }}-secrets
+                  key: db_pass
+            - name: secret_key
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.appName }}-secrets
+                  key: secret_key
+          image: {{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}
+          name: {{ .Values.appName }}-app
+          ports:
+            - containerPort: {{ .Values.app.containerPort }}
+              protocol: TCP
+      restartPolicy: Always

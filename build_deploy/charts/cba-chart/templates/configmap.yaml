@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.appName }}-configmap
+data:
+  db_host: {{ .Values.appName }}-mysql-service
+  db_port: "{{ .Values.mysql.containerPort }}"
+  db_user: {{ .Values.mysql.db_user }}
+  db_database: {{ .Values.mysql.db_database }}

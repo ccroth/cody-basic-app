@@ -1,0 +1,14 @@
+apiVersion: v2
+name: cba-chart-azure
+# THIS CHART IS BASICALLY THE SAME AS THE cba-chart. It just has slightly different default values
+# and the ingress doesn't specify a "host" under its rules to avoid the headache of setting up a DNS
+# record for this project (which in a production environment would be a straightforward matter, but in
+# my mind just adds additional steps for the person evaluating this assessment without any real benefit)
+
+description: A Helm chart for deploying cody-basic-app to AKS
+
+type: application
+
+version: 1.0.0
+
+appVersion: "base"

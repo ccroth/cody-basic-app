@@ -3,3 +3,6 @@ app/__pycache__
 k8s/
 .env
 .DS_Store
+.terraform/
+.terraform*
+terraform.tfstate*

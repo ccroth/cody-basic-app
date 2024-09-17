@@ -1,25 +1,24 @@
-# Default values for cba-chart
+# Default values for cba-chart-azure
 
 # aka "cody-basic-application"
 appName: cba
 
 app:
   image:
-    repository: codycroth/cba-app
+    repository: ccracr.azurecr.io/cba-app
     tag: latest
   containerPort: 8080
   replicaCount: 1
 
 mysql:
   image:
-    repository: codycroth/cba-mysql
+    repository: ccracr.azurecr.io/cba-mysql
     tag: latest
   containerPort: 3306
   db_user: root
   db_database: cba_db
 
-ingress:
-  appURL: cba.ccr.test
+# removed appURL - see rationale in the Chart.yaml for this chart
 
 secrets:
   db_pass: <encoded_pass_here>

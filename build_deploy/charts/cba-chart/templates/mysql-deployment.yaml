@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.34.0 (HEAD)
+  labels:
+    io.kompose.service: {{ .Values.appName }}-mysql
+  name: {{ .Values.appName }}-mysql
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: {{ .Values.appName }}-mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.34.0 (HEAD)
+      labels:
+        io.kompose.service: {{ .Values.appName }}-mysql
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.appName }}-configmap
+                  key: db_database
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.appName }}-secrets
+                  key: db_pass
+          image: {{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}
+          name: {{ .Values.appName }}-mysql
+          ports:
+            - containerPort: {{ .Values.mysql.containerPort }}
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: {{ .Values.volume.name }}
+      restartPolicy: Always
+      volumes:
+        - name: {{ .Values.volume.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.volume.name }}
